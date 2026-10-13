@@ -5,10 +5,14 @@ const path = require("path");
 // ========================================
 // DATABASE PATH
 // ========================================
+const fs = require("fs");
+
+const dbFolder = path.join(__dirname, "database");
+
+fs.mkdirSync(dbFolder, { recursive: true });
 
 const dbPath = path.join(
-    __dirname,
-    "database",
+    dbFolder,
     "leave_management.db"
 );
 
