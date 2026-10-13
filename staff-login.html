@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Login</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Staff Login</h1>
+        <p>Only admin-approved staff can log in.</p>
+
+        <form id="staffLoginForm">
+            <label for="staffId">Staff ID</label>
+            <input id="staffId" required>
+            <br><br>
+
+            <label for="password">Password</label>
+            <input id="password" type="password" required>
+            <br><br>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <p>
+            Need an account?
+            <a href="/staff-register.html">Register</a>
+        </p>
+
+        <p>
+            <a href="/">Back to login selection</a>
+        </p>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>

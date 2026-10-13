@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Admin Dashboard | Leave Management System</title>
+
+    <link
+        rel="stylesheet"
+        href="/css/style.css"
+    >
+
+    <style>
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+
+        .applications-table {
+            width: 100%;
+            min-width: 1100px;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+
+        .applications-table th,
+        .applications-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+
+        .applications-table th {
+            background-color: #4f46e5;
+            color: white;
+        }
+
+
+        .applications-table tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+
+
+        .action-button {
+            width: auto;
+            padding: 8px 12px;
+            margin: 2px;
+            font-size: 14px;
+        }
+
+
+        .admin-filter-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f8f8f8;
+        }
+
+
+        .admin-filter-container input,
+        .admin-filter-container select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+
+        .student-management-container {
+            margin-top: 20px;
+        }
+
+
+        .students-table {
+            width: 100%;
+            min-width: 900px;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+
+        .students-table th,
+        .students-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+
+        .students-table th {
+            background-color: #059669;
+            color: white;
+        }
+
+
+        .students-table tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+
+
+        .student-search-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f8f8f8;
+        }
+
+
+        .student-search-container input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="login-container">
+
+        <h1>
+            🎓 Student Leave Portal
+        </h1>
+
+
+        <h2>
+            Admin Dashboard
+        </h2>
+
+
+        <p>
+            Welcome,
+            <strong>
+                Administrator
+            </strong>
+        </p>
+
+
+        <hr>
+
+
+        <!-- ========================================
+             LEAVE MANAGEMENT
+             ======================================== -->
+
+        <h3>
+            Leave Management
+        </h3>
+
+
+        <button
+            type="button"
+            id="viewApplicationsButton"
+        >
+            📋 View Leave Applications
+        </button>
+
+
+        <br><br>
+
+
+        <!-- SEARCH AND FILTER -->
+
+        <div
+            class="admin-filter-container"
+            id="adminFilters"
+            style="display: none;"
+        >
+
+            <label for="studentSearch">
+                Search by Student ID
+            </label>
+
+            <input
+                type="text"
+                id="studentSearch"
+                placeholder="Enter Student ID"
+            >
+
+
+            <br><br>
+
+
+            <label for="statusFilter">
+                Filter by Status
+            </label>
+
+            <select id="statusFilter">
+
+                <option value="All">
+                    All
+                </option>
+
+                <option value="Pending">
+                    Pending
+                </option>
+
+                <option value="Approved">
+                    Approved
+                </option>
+
+                <option value="Rejected">
+                    Rejected
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div id="adminApplications">
+
+            <p>
+                Click "View Leave Applications" to
+                load student applications.
+            </p>
+
+        </div>
+
+
+        <hr>
+
+
+        <!-- ========================================
+             STUDENT MANAGEMENT
+             ======================================== -->
+
+        <h3>Registration Approval</h3>
+        <p>Review student and staff accounts. Only approved accounts can log in.</p>
+        <button type="button" id="loadRegistrationsButton">Load Pending Registrations</button>
+        <div id="registrationApprovals"><p>Click the button to load registration requests.</p></div>
+        <br>
+
+        <h3>
+            Student Management
+        </h3>
+
+
+        <button
+            type="button"
+            id="viewStudentsButton"
+        >
+            👨‍🎓 View Registered Students
+        </button>
+
+
+        <div
+            class="student-search-container"
+            id="studentSearchContainer"
+            style="display: none;"
+        >
+
+            <label for="registeredStudentSearch">
+                Search Students
+            </label>
+
+            <input
+                type="text"
+                id="registeredStudentSearch"
+                placeholder="Search by Student ID, Name, Email or Department"
+            >
+
+        </div>
+
+
+        <div
+            class="student-management-container"
+            id="adminStudents"
+        >
+
+            <p>
+                Click "View Registered Students"
+                to load registered students.
+            </p>
+
+        </div>
+
+
+        <br>
+
+
+        <!-- ========================================
+             LOGOUT
+             ======================================== -->
+
+        <button
+            type="button"
+            id="adminLogoutButton"
+        >
+            Logout
+        </button>
+
+    </div>
+
+
+    <script src="/js/app.js"></script>
+
+</body>
+
+</html>

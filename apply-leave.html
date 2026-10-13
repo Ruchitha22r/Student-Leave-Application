@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Apply for Leave | Leave Management System</title>
+
+    <link
+        rel="stylesheet"
+        href="/css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="login-container">
+
+        <h1>
+            🎓 Student Leave Portal
+        </h1>
+
+        <h2>
+            Apply for Leave
+        </h2>
+
+
+        <p>
+            Student:
+            <strong id="studentName">
+                Student
+            </strong>
+        </p>
+
+
+        <hr>
+
+
+        <form id="leaveForm">
+
+
+            <!-- Leave Type -->
+
+            <label for="leaveType">
+                Leave Type
+            </label>
+
+            <select
+                id="leaveType"
+                required
+                style="width: 100%; padding: 10px; box-sizing: border-box;"
+            >
+
+                <option value="">
+                    Select Leave Type
+                </option>
+
+                <option value="Sick Leave">
+                    Sick Leave
+                </option>
+
+                <option value="Casual Leave">
+                    Casual Leave
+                </option>
+
+                <option value="Emergency Leave">
+                    Emergency Leave
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+
+            <br><br>
+
+
+            <!-- Start Date -->
+
+            <label for="startDate">
+                Start Date
+            </label>
+
+            <input
+                type="date"
+                id="startDate"
+                required
+            >
+
+
+            <br><br>
+
+
+            <!-- End Date -->
+
+            <label for="endDate">
+                End Date
+            </label>
+
+            <input
+                type="date"
+                id="endDate"
+                required
+            >
+
+
+            <br><br>
+
+
+            <!-- Reason -->
+
+            <label for="reason">
+                Reason
+            </label>
+
+            <textarea
+                id="reason"
+                placeholder="Enter reason for leave"
+                rows="5"
+                required
+                style="width: 100%; padding: 10px; box-sizing: border-box; resize: vertical;"
+            ></textarea>
+
+
+            <br><br>
+
+
+            <!-- Submit -->
+
+            <button
+                type="submit"
+            >
+                Submit Leave Application
+            </button>
+
+
+        </form>
+
+
+        <br>
+
+
+        <button
+            type="button"
+            id="backDashboardButton"
+        >
+            Back to Dashboard
+        </button>
+
+    </div>
+
+
+    <script src="/js/app.js"></script>
+
+</body>
+
+</html>
