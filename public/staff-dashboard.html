@@ -1,45 +1,172 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Portal</title>
-    <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f4f6f9;
+      color: #222;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    h1 {
+      color: #234a84;
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 5px;
+      background: #234a84;
+      color: white;
+      cursor: pointer;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin-top: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background: #234a84;
+      color: white;
+    }
+
+    #message {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-    <div class="login-container">
-        <h1>Staff Portal</h1>
-        <p id="staffWelcome">Loading staff account...</p>
-        <p>Your account has been approved. You are signed in to the staff portal.</p>
-
-        <button id="staffLogoutButton" type="button">Logout</button>
+  <header>
+    <div>
+      <h1>Staff Dashboard</h1>
+      <p id="staffName">Welcome, Staff</p>
     </div>
+    <button id="logoutButton">Logout</button>
+  </header>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const staff = localStorage.getItem('staff');
+  <h2>Student Leave Applications</h2>
+  <p id="message">Loading applications...</p>
 
-            if (!staff) {
-                window.location.href = '/staff-login.html';
-                return;
-            }
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Student ID</th>
+          <th>Leave Type</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Applied On</th>
+        </tr>
+      </thead>
+      <tbody id="applicationsTable"></tbody>
+    </table>
+  </div>
 
-            try {
-                const user = JSON.parse(staff);
+  <script>
+    const staffData = localStorage.getItem("staff");
 
-                document.getElementById('staffWelcome').textContent =
-                    'Welcome, ' + user.name + ' (' + user.staff_id + ').';
-            } catch (e) {
-                localStorage.removeItem('staff');
-                window.location.href = '/staff-login.html';
-            }
+    if (!staffData) {
+      window.location.href = "/staff-login.html";
+    } else {
+      try {
+        const staff = JSON.parse(staffData);
+        document.getElementById("staffName").textContent =
+          "Welcome, " + (staff.name || staff.staff_id || "Staff");
+      } catch (error) {
+        localStorage.removeItem("staff");
+        window.location.href = "/staff-login.html";
+      }
+    }
 
-            document.getElementById('staffLogoutButton').addEventListener('click', () => {
-                localStorage.removeItem('staff');
-                window.location.href = '/staff-login.html';
-            });
-        });
-    </script>
+    document.getElementById("logoutButton").addEventListener("click", () => {
+      localStorage.removeItem("staff");
+      window.location.href = "/staff-login.html";
+    });
+
+    async function loadApplications() {
+      const message = document.getElementById("message");
+      const table = document.getElementById("applicationsTable");
+
+      try {
+        const response = await fetch("/api/admin/leave-applications");
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || "Could not load applications.");
+        }
+
+        table.replaceChildren();
+
+        const applications = data.applications || [];
+
+        if (applications.length === 0) {
+          message.textContent = "No leave applications found.";
+          return;
+        }
+
+        for (const app of applications) {
+          const row = document.createElement("tr");
+
+          const values = [
+            app.student_id,
+            app.leave_type,
+            app.start_date,
+            app.end_date,
+            app.reason,
+            app.status,
+            app.created_at
+          ];
+
+          for (const value of values) {
+            const cell = document.createElement("td");
+            cell.textContent = value ?? "—";
+            row.appendChild(cell);
+          }
+
+          table.appendChild(row);
+        }
+
+        message.textContent = "Applications loaded: " + applications.length;
+      } catch (error) {
+        console.error(error);
+        message.textContent =
+          "Unable to load applications. Please check the server and try again.";
+      }
+    }
+
+    loadApplications();
+  </script>
 </body>
 </html>
+```
