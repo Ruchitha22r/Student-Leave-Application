@@ -1857,7 +1857,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 localStorage.setItem("staff", JSON.stringify(data.staff));
                 alert("Login successful!");
                 // A dedicated staff portal can be added to the existing leave workflow next.
-                window.location.href = "/dashboard.html";
+             window.location.href = "/staff-dashboard.html";
             } catch (error) { console.error(error); alert("Unable to connect to server."); }
         });
     }
