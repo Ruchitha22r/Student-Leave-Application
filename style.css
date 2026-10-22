@@ -1,0 +1,85 @@
+/* ========================================
+   BASIC PAGE
+   ======================================== */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color:#f4f6f8;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* ========================================
+   LOGIN CONTAINER
+   ======================================== */
+
+.login-container {
+    width: 400px;
+    margin: 80px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+
+/* ========================================
+   HEADINGS
+   ======================================== */
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+h2 {
+    text-align: center;
+    color: #555;
+}
+
+
+/* ========================================
+   FORM
+   ======================================== */
+
+form {
+    margin-top: 25px;
+}
+
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+
+input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+/* ========================================
+   BUTTON
+   ======================================== */
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4f46e5;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+button:hover {
+    background-color: #3730a3;
+}

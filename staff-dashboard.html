@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Dashboard | Student Leave Management</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 24px; background: #f4f6f9; color: #222; }
+    header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    h1 { color: #234a84; margin-bottom: 8px; }
+    button { padding: 9px 13px; border: 0; border-radius: 5px; color: white; cursor: pointer; margin: 2px; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .logout { background: #555; }
+    .approve { background: #16803c; }
+    .reject { background: #c62828; }
+    .table-container { overflow-x: auto; margin-top: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px #0000000d; }
+    table { width: 100%; border-collapse: collapse; min-width: 950px; }
+    th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; vertical-align: top; }
+    th { background: #234a84; color: white; }
+    #message { margin-top: 20px; }
+    .status { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <header>
+    <div><h1>Staff Dashboard</h1><p id="staffName">Welcome, Staff</p></div>
+    <button class="logout" id="logoutButton">Logout</button>
+  </header>
+  <h2>Student Leave Applications</h2>
+  <p>Review each pending application and approve or reject it below.</p>
+  <p id="message" role="status">Loading applications...</p>
+  <div class="table-container">
+    <table>
+      <thead><tr>
+        <th>Student ID</th><th>Leave Type</th><th>Start Date</th><th>End Date</th>
+        <th>Reason</th><th>Status</th><th>Applied On</th><th>Actions</th>
+      </tr></thead>
+      <tbody id="applicationsTable"></tbody>
+    </table>
+  </div>
+<script>
+(() => {
+  let staff;
+  try {
+    staff = JSON.parse(localStorage.getItem("staff") || "null");
+  } catch (_) {
+    staff = null;
+  }
+  const token = localStorage.getItem("staffToken");
+  if (!staff || !token) {
+    window.location.href = "/staff-login.html";
+    return;
+  }
+  document.getElementById("staffName").textContent =
+    "Welcome, " + (staff.name || staff.staff_id || "Staff");
+
+  document.getElementById("logoutButton").addEventListener("click", async () => {
+    try {
+      await fetch("/api/staff/logout", {
+        method: "POST",
+        headers: { Authorization: "Bearer " + token }
+      });
+    } catch (_) {}
+    localStorage.removeItem("staff");
+    localStorage.removeItem("staffToken");
+    window.location.href = "/staff-login.html";
+  });
+
+  async function updateStatus(id, status, button) {
+    if (!confirm("Are you sure you want to " + status.toLowerCase() + " this leave application?")) return;
+    button.disabled = true;
+    try {
+      const response = await fetch("/api/staff/leave-applications/" + encodeURIComponent(id) + "/status", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+        body: JSON.stringify({ status })
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.message || "Unable to update leave status.");
+      document.getElementById("message").textContent = data.message;
+      await loadApplications();
+    } catch (error) {
+      document.getElementById("message").textContent = error.message || "Unable to update leave status.";
+      button.disabled = false;
+    }
+  }
+
+  async function loadApplications() {
+    const message = document.getElementById("message");
+    const table = document.getElementById("applicationsTable");
+    try {
+      const response = await fetch("/api/staff/leave-applications", {
+        headers: { "Authorization": "Bearer " + token }
+      });
+      const data = await response.json();
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("staff");
+        localStorage.removeItem("staffToken");
+        window.location.href = "/staff-login.html";
+        return;
+      }
+      if (!response.ok || !data.success) throw new Error(data.message || "Could not load applications.");
+      table.replaceChildren();
+      const applications = data.applications || [];
+      if (!applications.length) {
+        message.textContent = "No leave applications found.";
+        return;
+      }
+      for (const app of applications) {
+        const row = document.createElement("tr");
+        for (const value of [app.student_id, app.leave_type, app.start_date, app.end_date, app.reason, app.status, app.created_at]) {
+          const cell = document.createElement("td");
+          cell.textContent = value ?? "—";
+          if (value === app.status) cell.className = "status";
+          row.appendChild(cell);
+        }
+        const actionCell = document.createElement("td");
+        if (app.status === "Pending") {
+          const approve = document.createElement("button");
+          approve.className = "approve";
+          approve.textContent = "Approve";
+          approve.addEventListener("click", () => updateStatus(app.id, "Approved", approve));
+          const reject = document.createElement("button");
+          reject.className = "reject";
+          reject.textContent = "Reject";
+          reject.addEventListener("click", () => updateStatus(app.id, "Rejected", reject));
+          actionCell.append(approve, reject);
+        } else {
+          actionCell.textContent = "No action required";
+        }
+        row.appendChild(actionCell);
+        table.appendChild(row);
+      }
+      message.textContent = "Applications loaded: " + applications.length;
+    } catch (error) {
+      console.error(error);
+      message.textContent = error.message || "Unable to load applications. Please check the server and try again.";
+    }
+  }
+  loadApplications();
+})();
+</script>
+</body>
+</html>
