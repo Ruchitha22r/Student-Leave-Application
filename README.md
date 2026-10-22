@@ -1,4 +1,6 @@
-# Student Leave Management System
+Student Leave Management System
+
+Live Website: https://student-leave-application.onrender.com
 
 A web-based Student Leave Management System with student registration, admin approval of student/staff accounts, student leave requests, leave history, and staff-only leave approval/rejection. Admins can view leave applications but cannot decide them.
 
